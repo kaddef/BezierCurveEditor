@@ -64,8 +64,21 @@ class BezierCurveEditor {
             console.log("Cannot make loop with 2 anchors")
             return
         }
-        this.isLoop = this.isLoop ? false : true
-        //MAKE LOOP HERE
+        this.isLoop = !this.isLoop
+        this.points.push(new DraggableCircle(createVector(100, 100), false, `${this.controlCount}`))
+        this.controlCount += 1
+        this.points.push(new DraggableCircle(createVector(200, 200), false, `${this.controlCount}`))
+        this.controlCount += 1
+
+        this.points[this.points.length - 3].controls.push(this.points[this.points.length - 2])
+        this.points[0].controls.push(this.points[this.points.length - 1])
+
+        this.points[this.points.length - 2].setPairAndAnchor(this.points[this.points.length - 4], this.points[this.points.length - 3])
+        this.points[this.points.length - 4].setPairAndAnchor(this.points[this.points.length - 2], this.points[this.points.length - 3])
+
+        this.points[1].setPairAndAnchor(this.points[this.points.length - 1], this.points[0])
+        this.points[this.points.length - 1].setPairAndAnchor(this.points[1], this.points[0])
+
         console.log(this.isLoop)
     }
     //this not gonna work do it with inheritence
@@ -82,8 +95,11 @@ class BezierCurveEditor {
         //     point.update()
         //     point.draw()
         // }
-        for (let i = 0; i < this.points.length; i+=3) {
-            if(this.points[i+1] === undefined) {
+        //console.log(this.points.length)
+        //console.log("------")
+        for (let i = 0; i < this.isLoop ?  this.points.length-2 : this.points.length ; i+=3) {
+            //console.log(i)
+            if(this.points[i+1] === undefined || (this.isLoop && this.points[i+3] === undefined)) {
                 stroke(color(0,0,0,80))
                 line(this.points[i].pos.x, this.points[i].pos.y, this.points[i-1].pos.x, this.points[i-1].pos.y)
                 break
@@ -99,6 +115,13 @@ class BezierCurveEditor {
             this.drawBezierCurve(this.points[i].pos, this.points[i+1].pos, this.points[i+2].pos, this.points[i+3].pos);
         }
         //drawBezierCurve(this.points[0].pos, this.points[1].pos, this.points[2].pos, this.points[3].pos);
+        //console.log("++++++++")
+        if(this.isLoop) {
+            this.drawBezierCurve(this.points[this.points.length - 3].pos, this.points[this.points.length - 2].pos, this.points[this.points.length - 1].pos, this.points[0].pos);
+            stroke(color(0,0,0,80))
+            line(this.points[this.points.length - 3].pos.x, this.points[this.points.length - 3].pos.y, this.points[this.points.length - 2].pos.x, this.points[this.points.length - 2].pos.y)
+            line(this.points[this.points.length - 1].pos.x, this.points[this.points.length - 1].pos.y, this.points[0].pos.x, this.points[0].pos.y)
+        }
     }
 
     drawBezierCurve(p0, p1, p2, p3) {
