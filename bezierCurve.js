@@ -97,39 +97,49 @@ class BezierCurveEditor {
     draw() {
         for (let i = 0; i < this.isLoop ?  this.points.length-2 : this.points.length ; i+=3) {
             if(this.points[i+1] === undefined || (this.isLoop && this.points[i+3] === undefined)) {
-                stroke(color(0,0,0,80))
-                line(this.points[i].pos.x, this.points[i].pos.y, this.points[i-1].pos.x, this.points[i-1].pos.y)
+                if(isPointsActive) {
+                    stroke(color(0,255,0,80))
+                    line(this.points[i].pos.x, this.points[i].pos.y, this.points[i-1].pos.x, this.points[i-1].pos.y)
+                }
                 break
             }
-            if(i === 0) {
-                stroke(color(0,0,0,80))
-                line(this.points[i].pos.x, this.points[i].pos.y, this.points[i+1].pos.x, this.points[i+1].pos.y)
-            } else {
-                stroke(color(0,0,0,80))
-                line(this.points[i].pos.x, this.points[i].pos.y, this.points[i+1].pos.x, this.points[i+1].pos.y)
-                line(this.points[i].pos.x, this.points[i].pos.y, this.points[i-1].pos.x, this.points[i-1].pos.y)
-            }
             this.drawBezierCurve(this.points[i].pos, this.points[i+1].pos, this.points[i+2].pos, this.points[i+3].pos);
+            if(isPointsActive) {    
+                if(i === 0) {
+                    stroke(color(0,255,0,80))
+                    line(this.points[i].pos.x, this.points[i].pos.y, this.points[i+1].pos.x, this.points[i+1].pos.y)
+                } else {
+                    stroke(color(0,255,0,80))
+                    line(this.points[i].pos.x, this.points[i].pos.y, this.points[i+1].pos.x, this.points[i+1].pos.y)
+                    line(this.points[i].pos.x, this.points[i].pos.y, this.points[i-1].pos.x, this.points[i-1].pos.y)
+                }
+            }
         }
         if(this.isLoop) {
             this.drawBezierCurve(this.points[this.points.length - 3].pos, this.points[this.points.length - 2].pos, this.points[this.points.length - 1].pos, this.points[0].pos);
-            stroke(color(0,0,0,80))
-            line(this.points[this.points.length - 3].pos.x, this.points[this.points.length - 3].pos.y, this.points[this.points.length - 2].pos.x, this.points[this.points.length - 2].pos.y)
-            line(this.points[this.points.length - 1].pos.x, this.points[this.points.length - 1].pos.y, this.points[0].pos.x, this.points[0].pos.y)
+            if(isPointsActive) {
+                stroke(color(0,255,0,80))
+                line(this.points[this.points.length - 3].pos.x, this.points[this.points.length - 3].pos.y, this.points[this.points.length - 2].pos.x, this.points[this.points.length - 2].pos.y)
+                line(this.points[this.points.length - 1].pos.x, this.points[this.points.length - 1].pos.y, this.points[0].pos.x, this.points[0].pos.y)
+            }
         }
     }
 
     drawBezierCurve(p0, p1, p2, p3) {
         let previousPoint = null;
         let previousSegment = null
-        for (let t = 0; t <= 1; t += 0.2) {//When +=0.1 last quad is not drawing correctly i dont know why
+        for (let t = 0; t <= 1; t += 0.01) {//When +=0.1 last quad is not drawing correctly i dont know why
             let result = this.CubicCurve(p0, p1, p2, p3, t);
+            if(previousPoint && isPointsActive) {
+                stroke("green");
+                line(previousPoint.x, previousPoint.y, result.x, result.y);
+            }
             if(previousPoint) {
                 let dir = p5.Vector.sub(previousPoint, result).normalize().mult(-1);
                 let upDir = createVector(dir.y, -1 * dir.x).mult(20);
                 let downDir = createVector(-1 * dir.y, dir.x).mult(20)
-                if(previousSegment) {
-                    noStroke()
+                if(previousSegment && isRoadActive) {
+                    stroke("#28221c")
                     fill("#28221c")
                     quad(
                         previousSegment.p1.x,
@@ -156,12 +166,13 @@ class BezierCurveEditor {
             }
             previousPoint = result;
         }
-        if (previousSegment) {
+        if (previousSegment && isRoadActive) {
             let endPoint = this.CubicCurve(p0, p1, p2, p3, 1);
             let endDir = p5.Vector.sub(previousPoint, endPoint).normalize().mult(-1);
             let endUpDir = createVector(endDir.y, -1 * endDir.x).mult(20);
             let endDownDir = createVector(-1 * endDir.y, endDir.x).mult(20);
-            noStroke();
+            stroke("#28221c")
+            fill("#28221c")
             quad(
                 previousSegment.p1.x,
                 previousSegment.p1.y,

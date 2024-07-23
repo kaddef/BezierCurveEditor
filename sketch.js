@@ -1,7 +1,7 @@
 let curveEditor;
 
 function setup() {
-    createCanvas(1024,512)
+    createCanvas(1792,768)
     background(0)
     frameRate(60)
     curveEditor = new BezierCurveEditor(createVector(256,256))
@@ -11,9 +11,11 @@ function setup() {
 function draw() {
     background(128)
     curveEditor.draw()
-    for (const point of curveEditor.points) {
-        point.update()
-        point.draw()
+    if(isPointsActive) {
+        for (const point of curveEditor.points) {
+            point.update()
+            point.draw()
+        }
     }
 }
 
