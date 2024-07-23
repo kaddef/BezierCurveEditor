@@ -44,7 +44,7 @@ class DraggableCircle {
     }
 
     released() {
-        console.log(this)
+        //console.log(this)
         this.dragging = false;
     }
 

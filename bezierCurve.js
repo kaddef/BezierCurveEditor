@@ -24,6 +24,10 @@ class BezierCurveEditor {
     }
     
     addPoint(x, y) {
+        if(this.isLoop) {
+            console.log("How do you add a point to a closed loop?")
+            return 
+        }
         if(x >= width || y>= height) {
             console.log("Cannot add point out of canvas")
             return
@@ -64,22 +68,36 @@ class BezierCurveEditor {
             console.log("Cannot make loop with 2 anchors")
             return
         }
+        if(this.isLoop) {
+            this.points.pop()
+            this.points.pop()
+        } else {
+            let firstControl = createVector(
+                2 * this.points[this.points.length-1].pos.x - this.points[this.points.length-2].pos.x,
+                2 * this.points[this.points.length-1].pos.y - this.points[this.points.length-2].pos.y,
+            )
+
+            let secondControl = createVector(
+                2 * this.points[0].pos.x - this.points[1].pos.x,
+                2 * this.points[0].pos.y - this.points[1].pos.y,
+            )
+
+            this.points.push(new DraggableCircle(firstControl, false, `${this.controlCount}`))
+            this.controlCount += 1
+            this.points.push(new DraggableCircle(secondControl, false, `${this.controlCount}`))
+            this.controlCount += 1
+    
+            this.points[this.points.length - 3].controls.push(this.points[this.points.length - 2])
+            this.points[0].controls.push(this.points[this.points.length - 1])
+            
+            this.points[this.points.length - 2].setPairAndAnchor(this.points[this.points.length - 4], this.points[this.points.length - 3])
+            this.points[this.points.length - 4].setPairAndAnchor(this.points[this.points.length - 2], this.points[this.points.length - 3])
+            
+            this.points[1].setPairAndAnchor(this.points[this.points.length - 1], this.points[0])
+            this.points[this.points.length - 1].setPairAndAnchor(this.points[1], this.points[0])
+        }
+        
         this.isLoop = !this.isLoop
-        this.points.push(new DraggableCircle(createVector(100, 100), false, `${this.controlCount}`))
-        this.controlCount += 1
-        this.points.push(new DraggableCircle(createVector(200, 200), false, `${this.controlCount}`))
-        this.controlCount += 1
-
-        this.points[this.points.length - 3].controls.push(this.points[this.points.length - 2])
-        this.points[0].controls.push(this.points[this.points.length - 1])
-
-        this.points[this.points.length - 2].setPairAndAnchor(this.points[this.points.length - 4], this.points[this.points.length - 3])
-        this.points[this.points.length - 4].setPairAndAnchor(this.points[this.points.length - 2], this.points[this.points.length - 3])
-
-        this.points[1].setPairAndAnchor(this.points[this.points.length - 1], this.points[0])
-        this.points[this.points.length - 1].setPairAndAnchor(this.points[1], this.points[0])
-
-        console.log(this.isLoop)
     }
     //this not gonna work do it with inheritence
     // update() {
