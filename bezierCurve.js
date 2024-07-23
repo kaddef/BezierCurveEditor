@@ -41,12 +41,6 @@ class BezierCurveEditor {
         )
         let secondControl = createVector((firstControl.x+x)/2, (firstControl.y+y)/2)
         let firstAnchor = createVector(x,y)
-        // fill("blue")
-        // ellipse(firstControl.x, firstControl.y, 10,10)
-        // ellipse(x, y, 10, 10)
-        // ellipse((firstControl.x+x)/2, (firstControl.y+y)/2, 10, 10)
-        // console.log(firstControl.x)
-        // console.log(firstControl.y)
 
         this.points.push(new DraggableCircle(firstControl, false, `${this.controlCount}`))
         this.controlCount += 1
@@ -99,24 +93,9 @@ class BezierCurveEditor {
         
         this.isLoop = !this.isLoop
     }
-    //this not gonna work do it with inheritence
-    // update() {
-    //     for (const [index, point] of this.points.entries()) {
-    //         if(!point.isAnchor && index !== 1 && index !== this.points.length - 2) {
-                
-    //         }
-    //     }
-    // }
 
     draw() {
-        // for (const point of this.points) {
-        //     point.update()
-        //     point.draw()
-        // }
-        //console.log(this.points.length)
-        //console.log("------")
         for (let i = 0; i < this.isLoop ?  this.points.length-2 : this.points.length ; i+=3) {
-            //console.log(i)
             if(this.points[i+1] === undefined || (this.isLoop && this.points[i+3] === undefined)) {
                 stroke(color(0,0,0,80))
                 line(this.points[i].pos.x, this.points[i].pos.y, this.points[i-1].pos.x, this.points[i-1].pos.y)
@@ -132,8 +111,6 @@ class BezierCurveEditor {
             }
             this.drawBezierCurve(this.points[i].pos, this.points[i+1].pos, this.points[i+2].pos, this.points[i+3].pos);
         }
-        //drawBezierCurve(this.points[0].pos, this.points[1].pos, this.points[2].pos, this.points[3].pos);
-        //console.log("++++++++")
         if(this.isLoop) {
             this.drawBezierCurve(this.points[this.points.length - 3].pos, this.points[this.points.length - 2].pos, this.points[this.points.length - 1].pos, this.points[0].pos);
             stroke(color(0,0,0,80))
@@ -143,13 +120,58 @@ class BezierCurveEditor {
     }
 
     drawBezierCurve(p0, p1, p2, p3) {
-        let previousPoint = p0;
-        for (let t = 0; t <= 1; t += 0.1) {
+        let previousPoint = null;
+        let previousSegment = null
+        for (let t = 0; t <= 1; t += 0.2) {//When +=0.1 last quad is not drawing correctly i dont know why
             let result = this.CubicCurve(p0, p1, p2, p3, t);
-            stroke("green");
-            line(previousPoint.x, previousPoint.y, result.x, result.y);
-            noStroke();
+            if(previousPoint) {
+                let dir = p5.Vector.sub(previousPoint, result).normalize().mult(-1);
+                let upDir = createVector(dir.y, -1 * dir.x).mult(20);
+                let downDir = createVector(-1 * dir.y, dir.x).mult(20)
+                if(previousSegment) {
+                    noStroke()
+                    fill("#28221c")
+                    quad(
+                        previousSegment.p1.x,
+                        previousSegment.p1.y,
+                        previousSegment.p2.x,
+                        previousSegment.p2.y,
+                        previousPoint.x + downDir.x,
+                        previousPoint.y + downDir.y,
+                        previousPoint.x + upDir.x,
+                        previousPoint.y + upDir.y,
+                        10,10
+                    )
+                }
+                previousSegment = {
+                    p1: {
+                        x: previousPoint.x + upDir.x,
+                        y: previousPoint.y + upDir.y
+                    },
+                    p2: {
+                        x: previousPoint.x + downDir.x,
+                        y: previousPoint.y + downDir.y
+                    }
+                };
+            }
             previousPoint = result;
+        }
+        if (previousSegment) {
+            let endPoint = this.CubicCurve(p0, p1, p2, p3, 1);
+            let endDir = p5.Vector.sub(previousPoint, endPoint).normalize().mult(-1);
+            let endUpDir = createVector(endDir.y, -1 * endDir.x).mult(20);
+            let endDownDir = createVector(-1 * endDir.y, endDir.x).mult(20);
+            noStroke();
+            quad(
+                previousSegment.p1.x,
+                previousSegment.p1.y,
+                previousSegment.p2.x,
+                previousSegment.p2.y,
+                endPoint.x + endDownDir.x,
+                endPoint.y + endDownDir.y,
+                endPoint.x + endUpDir.x,
+                endPoint.y + endUpDir.y
+            );
         }
     }
 

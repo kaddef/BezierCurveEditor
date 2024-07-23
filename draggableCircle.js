@@ -73,7 +73,7 @@ class DraggableCircle {
     draw() {
         fill(this.color)
         if(this.name != "") {
-            text(this.name, this.pos.x+10, this.pos.y-10)
+            //text(this.name, this.pos.x+10, this.pos.y-10)
         }
         ellipse(this.pos.x, this.pos.y, this.diameter, this.diameter)
     }

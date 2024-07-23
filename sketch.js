@@ -10,12 +10,11 @@ function setup() {
 
 function draw() {
     background(128)
+    curveEditor.draw()
     for (const point of curveEditor.points) {
         point.update()
         point.draw()
     }
-    curveEditor.draw()
-    //curveEditor.update()
 }
 
 function keyPressed() {
@@ -26,7 +25,7 @@ function keyPressed() {
         curveEditor.makeLoop()
     }
     if (key === 'i') {
-        //draw()
+        draw()
     }
   }
 
