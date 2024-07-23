@@ -1,4 +1,3 @@
-// probable need to seperate anchor and control
 class DraggableCircle {
     constructor(pos, isAnchor = false, name = "") {
         this.pos = pos;

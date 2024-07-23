@@ -10,6 +10,7 @@ function setup() {
 
 function draw() {
     background(128)
+    text(Math.floor(frameRate()),20,20)
     curveEditor.draw()
     if(isPointsActive) {
         for (const point of curveEditor.points) {
