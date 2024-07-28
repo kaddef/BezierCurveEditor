@@ -4,7 +4,7 @@ let lastUpdateTime = 0;
 let updateInterval = 100;
 
 function setup() {
-    createCanvas(512, 512)
+    createCanvas(windowWidth, windowHeight)
     background(0)
     frameRate(60)
     fps = frameRate();
@@ -23,6 +23,10 @@ function draw() {
     textSize(24);
     text("FPS: " + fps.toFixed(0), 10, 30);
     curveEditor.draw()
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
 }
 
 function keyPressed() {

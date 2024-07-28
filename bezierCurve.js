@@ -36,6 +36,7 @@ class BezierCurveEditor {
     addPoint(x, y) {
         if (this.isLoop || x >= width || y >= height) {
             console.log("ERROR")
+            errorText.innerHTML = "Cannot add point to loop or outside of canvas"
             return
         }
 
@@ -62,6 +63,7 @@ class BezierCurveEditor {
     toggleLoop() {
         if(this.anchorCount <= 2 && !this.isLoop) {
             console.log("Cannot make loop with 2 anchors")
+            errorText.innerHTML = "Cannot make loop with 2 anchors"
             return
         }
         if(this.isLoop) {

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bezier Curve Editor</title>
+    <link rel="stylesheet" href="style.css">
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
     <script defer src="variables.js"></script>
     <script defer src="draggableCircle.js"></script>
@@ -11,16 +12,20 @@
     <script defer src="sketch.js"></script>
 </head>
 <body>
-    <button onclick="toggleRoad()" id="road">Toggle Road</button>
-    <button onclick="togglePoints()" id="points">Toggle Anchors And Controls</button>
+    <main>
+        <div class="button-container">
+            <button onclick="toggleRoad()" id="road">Toggle Road</button>
+            <button onclick="togglePoints()" id="points">Toggle Points</button>
+            <span> Use Y for adding new anchor to mouse position</span>
+            <span> Use U for close or open path</span>
+            <span id="error"></span>
+        </div>
+    </main>
 </body>
 </html>
 
 <!-- 
 todos:
-- seperate anchor and control to different classes
-- long functions
-- fps problem when displaying road
-- better ui
+- fps problem when displaying roady
 - optimization
 -->
