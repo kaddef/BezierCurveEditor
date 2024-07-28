@@ -1,23 +1,28 @@
 let curveEditor;
+let fps;
+let lastUpdateTime = 0;
+let updateInterval = 100;
 
 function setup() {
-    createCanvas(1792,768)
+    createCanvas(512, 512)
     background(0)
     frameRate(60)
-    curveEditor = new BezierCurveEditor(createVector(256,256))
+    fps = frameRate();
+    curveEditor = new BezierCurveEditor(createVector(256, 256))
     //noLoop()
 }
 
 function draw() {
     background(128)
-    text(Math.floor(frameRate()),20,20)
-    curveEditor.draw()
-    if(isPointsActive) {
-        for (const point of curveEditor.points) {
-            point.update()
-            point.draw()
-        }
+    if (millis() - lastUpdateTime > updateInterval) {
+        fps = frameRate();
+        lastUpdateTime = millis();
     }
+    fill(0);
+    stroke(0);
+    textSize(24);
+    text("FPS: " + fps.toFixed(0), 10, 30);
+    curveEditor.draw()
 }
 
 function keyPressed() {
@@ -25,21 +30,17 @@ function keyPressed() {
         curveEditor.addPoint(mouseX, mouseY)
     }
     if (key === 'u') {
-        curveEditor.makeLoop()
+        curveEditor.toggleLoop()
     }
     if (key === 'i') {
-        draw()
-    }
-  }
-
-function mousePressed() {
-    for (const point of curveEditor.points) {
-        point.pressed()
+        redraw()
     }
 }
 
+function mousePressed() {
+    curveEditor.points.forEach(point => point.pressed());
+}
+
 function mouseReleased() {
-    for (const point of curveEditor.points) {
-        point.released()
-    }
+    curveEditor.points.forEach(point => point.released());
 }
