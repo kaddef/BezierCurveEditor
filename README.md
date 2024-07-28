@@ -49,7 +49,3 @@ This project is inspired by Sebastian Lague's [Curve Editor](https://www.youtube
 ## Contributing
 
 Contributions are welcome!
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
