@@ -93,20 +93,6 @@ class BezierCurveEditor {
 
             this.points[1].setPairAndAnchor(this.points[this.points.length - 1], firstAnchor);
             this.points[this.points.length - 1].setPairAndAnchor(this.points[1], firstAnchor);
-
-            // this.points.push(new DraggableCircle(firstControl, false, `${this.controlCount}`))
-            // this.controlCount += 1
-            // this.points.push(new DraggableCircle(secondControl, false, `${this.controlCount}`))
-            // this.controlCount += 1
-    
-            // this.points[this.points.length - 3].controls.push(this.points[this.points.length - 2])
-            // this.points[0].controls.push(this.points[this.points.length - 1])
-            
-            // this.points[this.points.length - 2].setPairAndAnchor(this.points[this.points.length - 4], this.points[this.points.length - 3])
-            // this.points[this.points.length - 4].setPairAndAnchor(this.points[this.points.length - 2], this.points[this.points.length - 3])
-            
-            // this.points[1].setPairAndAnchor(this.points[this.points.length - 1], this.points[0])
-            // this.points[this.points.length - 1].setPairAndAnchor(this.points[1], this.points[0])
         }
         
         this.isLoop = !this.isLoop
@@ -149,43 +135,11 @@ class BezierCurveEditor {
         }
     }
 
-    // draw() {
-    //     for (let i = 0; i < this.isLoop ?  this.points.length-2 : this.points.length ; i+=3) {
-    //         if(this.points[i+1] === undefined || (this.isLoop && this.points[i+3] === undefined)) {
-    //             if(isPointsActive) {
-    //                 stroke(color(0,255,0,80))
-    //                 line(this.points[i].pos.x, this.points[i].pos.y, this.points[i-1].pos.x, this.points[i-1].pos.y)
-    //             }
-    //             break
-    //         }
-    //         this.drawBezierCurve(this.points[i].pos, this.points[i+1].pos, this.points[i+2].pos, this.points[i+3].pos);
-    //         if(isPointsActive) {    
-    //             if(i === 0) {
-    //                 stroke(color(0,255,0,80))
-    //                 line(this.points[i].pos.x, this.points[i].pos.y, this.points[i+1].pos.x, this.points[i+1].pos.y)
-    //             } else {
-    //                 stroke(color(0,255,0,80))
-    //                 line(this.points[i].pos.x, this.points[i].pos.y, this.points[i+1].pos.x, this.points[i+1].pos.y)
-    //                 line(this.points[i].pos.x, this.points[i].pos.y, this.points[i-1].pos.x, this.points[i-1].pos.y)
-    //             }
-    //         }
-    //     }
-    //     if(this.isLoop) {
-    //         this.drawBezierCurve(this.points[this.points.length - 3].pos, this.points[this.points.length - 2].pos, this.points[this.points.length - 1].pos, this.points[0].pos);
-    //         if(isPointsActive) {
-    //             stroke(color(0,255,0,80))
-    //             line(this.points[this.points.length - 3].pos.x, this.points[this.points.length - 3].pos.y, this.points[this.points.length - 2].pos.x, this.points[this.points.length - 2].pos.y)
-    //             line(this.points[this.points.length - 1].pos.x, this.points[this.points.length - 1].pos.y, this.points[0].pos.x, this.points[0].pos.y)
-    //         }
-    //     }
-    // }
-
     drawRoadSegment(previousPoint, result, previousSegment) {
         let dir = p5.Vector.sub(previousPoint, result).normalize().mult(-1);
         let upDir = createVector(dir.y, -dir.x).mult(20);
         let downDir = createVector(-dir.y, dir.x).mult(20);
 
-        //console.log(previousSegment)
         if (previousSegment && isRoadActive) {
             stroke("#28221c");
             fill("#28221c");

@@ -23,7 +23,6 @@ class DraggableCircle {
     }
 
     released() {
-        //console.log(this)
         this.dragging = false;
     }
 
